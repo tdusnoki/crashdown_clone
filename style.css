@@ -1,0 +1,54 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #282c34;
+    margin: 0;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+#game-container {
+    display: flex;
+    gap: 20px; /* Add some space between the game board and score */
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    gap: 2px;
+    border: 2px solid white; /* Border around the game board */
+}
+
+.square {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #ccc; /* Border around each square */
+}
+
+.red { background-color: red; }
+.green { background-color: green; }
+.blue { background-color: blue; }
+.yellow { background-color: yellow; }
+.purple { background-color: purple; }
+
+#game-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#score {
+    font-size: 20px;
+}
+
+#game-over {
+    font-size: 24px;
+    color: red;
+}
