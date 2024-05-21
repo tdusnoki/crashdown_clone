@@ -2,27 +2,37 @@ $(document).ready(function() {
     const rows = 15; // Number of rows in the game board
     const cols = 10; // Number of columns in the game board
     const colors = ['red', 'green', 'blue', 'yellow', 'purple']; // Available colors for the squares
-    const gameBoard = $('#game-board'); // jQuery reference to the game board element
-    const gameOverMessage = $('#game-over'); // jQuery reference to the game over message element
-    const scoreElement = $('#score'); // jQuery reference to the score element
+    const gameBoard = $('#game-board'); // jQuery reference to the game board
+    const gameOverMessage = $('#game-over'); // jQuery reference to the game over message
+    const scoreElement = $('#score'); // jQuery reference to the score
+    const timerElement = $('#timer'); // JQuery reference to the timer
+    const levelElement = $('#level'); // JQuery reference to the level
+    const scoreBoardElement = $('#scoreboard'); // JQuery reference to the scoreboard
+    const scoreListElement = $('#score-list'); // JQuery reference to the score list
+    const playerNameInput = $('#player-name'); // JQuery reference to player name
+    const saveScoreButton = $('#save-score'); // JQuery reference to save score button
     let board = []; // 2D array representing the game board
     let gameOver = false; // Flag to check if the game is over
     let score = 0; // Variable to keep track of the score
+    let level = 1; // Variable to keep track of the level
+    let intervalId = null; // Variable to hold the interval timer
+    let elapsedTime = 0; // Variable to keep track of elapsed time
+    let timeUntilNewLine = 5; // Counter for adding a new line every 5 seconds
 
     // Function to initialize the game board
-    function createBoard() {
-        for (let i = 0; i < rows; i++) {
-            let row = [];
-            for (let j = 0; j < cols; j++) {
-    if (i < Math.floor(rows / 2)) {
-        row.push(null); // Top half of the board is empty
-    } else {
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        row.push(color); // Bottom half of the board is filled with squares
+function createBoard() {
+    for (let i = 0; i < rows; i++) {
+        let row = [];
+        for (let j = 0; j < cols; j++) {
+            if (i < Math.floor(rows / 2)) {
+                row.push(null); // Top half of the board is empty
+            } else {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                row.push(color); // Bottom half of the board is filled with squares
+            }
+        }
+    board.push(row);
     }
-}
-board.push(row);
-}
 }
 
 // Function to render the game board in the HTML
@@ -38,6 +48,44 @@ function renderBoard() {
             gameBoard.append(square); // Append the square to the game board
         }
     }
+}
+
+// Function to clear the game board and reset the game
+function resetBoard() {
+    board = []; //clear board
+    gameOver = false;
+    score = 0;
+    elapsedTime = 0;
+    level = 1;
+    scoreElement.text(`Score: ${score}`); // reset score display
+    timerElement.text(`Time: ${elapsedTime}s`); // reset timer
+    levelElement.text(`Level: ${level}`); // reset level
+    gameOverMessage.hide();
+    if (intervalId) {
+        clearInterval(intervalId); // Stop the interval timer if it's running
+        intervalId = null;
+    }
+    createBoard();
+    renderBoard();
+}
+
+// Function to start the interval timer for adding new lines
+function startNewLineTimer() {
+    if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+    intervalId = setInterval(() => {
+        elapsedTime++; // Increment elapsed time by 1 second
+        timerElement.text(`Time: ${elapsedTime}s`); // update timer
+
+        timeUntilNewLine--; //Decrement the time until new line is added
+        if (timeUntilNewLine <= 0) {
+            addNewLine();
+            // Decrease interval between spawns based on level but ensure it doesn't go below 1 to avoid 0 second spawns
+            timeUntilNewLine = Math.max(1, 5 - (level - 1));
+        }
+    }, 1000); // Update every second
 }
 
 // Function to find all adjacent squares of the same color
@@ -67,8 +115,8 @@ function removeGroup(group) {
         board[r][c] = null; // Remove the square by setting it to null
     });
 
-    for (let c = 0; c < cols; c++) {
-        let emptySpaces = 0;
+     for (let c = 0; c < cols; c++) {
+       let emptySpaces = 0;
         for (let r = rows - 1; r >= 0; r--) {
             if (board[r][c] === null) {
                 emptySpaces++;
@@ -82,6 +130,12 @@ function removeGroup(group) {
     // Update the score
     score += group.length;
     scoreElement.text(`Score: ${score}`);
+
+    if (score >= level * 30) { // levelUp multiplier
+        level++;
+        levelElement.text(`Level: ${level}`); // update level display
+        timeUntilNewLine--; //levelUp means less time between new line spawns
+    }
 }
 
 // Function to add a new line of squares at the bottom
@@ -106,6 +160,9 @@ function addNewLine() {
         if (board[0][c] !== null) {
             gameOver = true;
             gameOverMessage.show();
+            clearInterval(intervalId); // Stop the interval timer if the game is over
+            intervalId = null;
+            scoreBoardElement.show();
             break;
         }
     }
@@ -121,11 +178,62 @@ gameBoard.on('click', '.square', function() {
     if (group.length > 0) {
         removeGroup(group); // Remove the group if it exists
         renderBoard(); // Re-render the game board
+
+        // Start the new line timer if it's not running already
+        if (!intervalId) {
+            startNewLineTimer();
+        }
     }
 });
 
-createBoard(); // Initialize the game board
-renderBoard(); // Render the initial game board
+$('#restart-btn').on('click', function() {
+    resetBoard(); // Clear board and reset game if clicked
+});
 
-setInterval(addNewLine, 5000); // Add a new line every 5 seconds
+saveScoreButton.on('click', function() {
+    const playerName = playerNameInput.val().trim(); //get player name
+    if (playerName === '') {
+        alert('Please enter your name.');
+        return;
+    }
+
+    // save new score
+    const newScore = {
+        name: playerName,
+        score: score,
+        level: level,
+        time: elapsedTime
+    };
+
+    // Get existing scores from localStorage
+    const scores = JSON.parse(localStorage.getItem('scores')) || [];
+
+    scores.push(newScore);
+
+    // Sort scores array by score in descending order
+    scores.sort((a,b) => b.score - a.score);
+
+    // Update localStorage with the updated scores array
+    localStorage.setItem('scores', JSON.stringify(scores));
+
+    scoreFormElement.hide();
+
+    displayScoreboard(scores);
+
+});
+
+function displayScoreboard(scores) {
+    scoreListElement.empty(); // Clear existing scoreboard
+    scores.slice(0, 10).forEach(score => {
+        const listItem = $('<li></li>').text(`${score.name}: ${score.score} (Level: ${score.level}, Time: ${score.time}s)`);
+        scoreListElement.append(listItem);
+    });
+    scoreboardElement.show();
+}
+
+//Display the scoreboard when the game loads
+const scores = JSON.parse(localStorage.getItem('scores')) || [];
+displayScoreboard(scores);
+
+resetBoard();
 });

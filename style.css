@@ -10,8 +10,8 @@ body {
 }
 
 #game-container {
-    display: flex;
     gap: 20px; /* Add some space between the game board and score */
+    flex-direction: column;
 }
 
 #game-board {
@@ -19,6 +19,7 @@ body {
     grid-template-columns: repeat(10, 30px);
     gap: 2px;
     border: 2px solid white; /* Border around the game board */
+    position: relative;
 }
 
 .square {
@@ -44,11 +45,83 @@ body {
     gap: 10px;
 }
 
-#score {
+#score #timer # level {
     font-size: 20px;
+    display: inline-block;
 }
 
 #game-over {
     font-size: 24px;
-    color: red;
+    color: white;
+    text-align: center;
+    position: absolute;
+    background-color: rgba(255,0,0,0.8);
+    top:50%;
+    left:45%;
+    padding: 20px;
+    font-weight: bold;
+    display: none;
+    border: 2px solid black;
+    border-radius: 10px;
+    animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+#restart-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#restart-btn:hover {
+    background-color: #555;
+}
+
+#scoreboard {
+    position: absolute;
+    top: 30%;
+    right: 15%;
+    width: 200px;
+    border: 2px solid black;
+    padding: 10px;
+    background-color: #fff;
+}
+
+#score-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#score-list li {
+    margin-bottom: 5px;
+}
+
+#show-score-form {
+    display: block;
+    margin-top: 10px;
+}
+
+#score-form {
+    display: none;
+}
+
+#score-form input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
 }
