@@ -93,7 +93,7 @@ body {
     text-align: center;
     position: absolute;
     background-color: rgba(255,0,0,0.8);
-    top:50%;
+    top:45%;
     left:45%;
     padding: 20px;
     font-weight: bold;
@@ -142,7 +142,7 @@ body {
     position:absolute;
     text-align:center;
     top:25%;
-    left:40%;
+    left:43.5%;
     animation: fadeIn 1s ease forwards;
     width: 200px;
     background-color: #3d4148;

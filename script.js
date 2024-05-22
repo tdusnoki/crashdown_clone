@@ -35,20 +35,25 @@ $('#play-button').on('click', function() {
 function playBGMusic() {
     const bgMusic = document.getElementById('bg-music');
     bgMusic.play();
-    console.log("playing");
 }
 
 // Function to pause background music
 function pauseBGMusic() {
     const bgMusic = document.getElementById('bg-music');
     bgMusic.pause();
-    console.log("paused");
 }
 
 // Function to play game over sound
 function playGameOverSound() {
     const gameOverSound = document.getElementById('gameover-sound');
     gameOverSound.play();
+}
+
+// Function to play game over sound
+function playSquareDestroySound() {
+    const squareDestroySound = document.getElementById('square-destroy-sound');
+    squareDestroySound.currentTime = 0;
+    squareDestroySound.play();
 }
 
 // Function to initialize the game board
@@ -214,6 +219,7 @@ gameBoard.on('click', '.square', function() {
     const col = $(this).data('col');
     const group = getAdjacent(row, col); // Get the group of adjacent squares
     if (group.length > 0) {
+        playSquareDestroySound();
         removeGroup(group); // Remove the group if it exists
         renderBoard(); // Re-render the game board
 
