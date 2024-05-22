@@ -8,6 +8,9 @@
     <script src="script.js" defer></script>
 </head>
 <body>
+    <div id="overlay">
+        <div id="play-button">PLAY</div>
+    </div>
     <div id="game-container">
         <div id="game-board"></div>
         <div id="game-info">
@@ -15,19 +18,25 @@
             <div id="timer">Time: 0</div>
             <div id="level">Level: 1</div>
             <div id="restart-btn">Restart</div>
-            <div id="game-over" style="display: none;">Game Over!</div>
         </div>
     </div>
     <div id="scoreboard">
         <h2>Scoreboard</h2>
         <ol id="score-list"></ol>
-        <button id="show-score-form">Add Score</button>
     </div>
-    <div id="score-form">
-        <h3>Add Score</h3>
+    <div id="score-overlay">
+        <div id="score-form">
             <input type="text" id="player-name" placeholder="Your Name">
             <button id="save-score">Save Score</button>
+        </div>
+            <div id="game-over">Game Over!</div>
     </div>
-
+    <audio id="bg-music" loop>
+        <source src="bg_music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="gameover-sound">
+        <source src="gameover.mp3" type="audio/mpeg">
+    </audio>
 </body>
 </html>

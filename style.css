@@ -9,6 +9,43 @@ body {
     font-family: Arial, sans-serif;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999; /* Ensure the overlay is on top of other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* Apply blur effect to background */
+}
+
+#score-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999; /* Ensure the overlay is on top of other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* Apply blur effect to background */
+    display: none;
+}
+
+#play-button {
+    color: white;
+    background-color: #3d4148;
+    padding: 20px 40px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 #game-container {
     gap: 20px; /* Add some space between the game board and score */
     flex-direction: column;
@@ -20,6 +57,7 @@ body {
     gap: 2px;
     border: 2px solid white; /* Border around the game board */
     position: relative;
+    z-index: 900;
 }
 
 .square {
@@ -29,7 +67,6 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    border: 1px solid #ccc; /* Border around each square */
 }
 
 .red { background-color: red; }
@@ -45,7 +82,7 @@ body {
     gap: 10px;
 }
 
-#score #timer # level {
+#score,#timer,#level {
     font-size: 20px;
     display: inline-block;
 }
@@ -60,25 +97,13 @@ body {
     left:45%;
     padding: 20px;
     font-weight: bold;
-    display: none;
     border: 2px solid black;
     border-radius: 10px;
     animation: fadeIn 1s ease forwards;
+    z-index: 999;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-
-#restart-btn {
+#restart-btn, #save-score {
     padding: 10px 20px;
     font-size: 16px;
     background-color: #444;
@@ -88,18 +113,19 @@ body {
     border-radius: 5px;
 }
 
-#restart-btn:hover {
+#restart-btn, #save-score:hover {
     background-color: #555;
 }
 
 #scoreboard {
     position: absolute;
-    top: 30%;
-    right: 15%;
-    width: 200px;
+    top: 8px;
+    right: 16px;
+    max-width: 250px;
     border: 2px solid black;
     padding: 10px;
-    background-color: #fff;
+    background-color: #3d4148;
+    color: white;
 }
 
 #score-list {
@@ -112,16 +138,33 @@ body {
     margin-bottom: 5px;
 }
 
-#show-score-form {
-    display: block;
-    margin-top: 10px;
-}
-
 #score-form {
-    display: none;
+    position:absolute;
+    text-align:center;
+    top:25%;
+    left:40%;
+    animation: fadeIn 1s ease forwards;
+    width: 200px;
+    background-color: #3d4148;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 999;
 }
 
 #score-form input[type="text"] {
     width: 100%;
     margin-bottom: 10px;
+    background-color: #444;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
