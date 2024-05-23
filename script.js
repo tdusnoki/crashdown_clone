@@ -217,6 +217,9 @@ gameBoard.on('click', '.square', function() {
 
     const row = $(this).data('row');
     const col = $(this).data('col');
+
+    if (board[row][col] === null) return; // Prevent clicking on empty squares to gain points
+
     const group = getAdjacent(row, col); // Get the group of adjacent squares
     if (group.length > 0) {
         playSquareDestroySound();
